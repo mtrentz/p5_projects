@@ -6,7 +6,6 @@ Some drawings and animations I've been making on p5.
 
 <br/>
 <br/>
-<br/>
 
 - Pyramids:
   - https://preview.p5js.org/mtrentz/present/nGLS11___
