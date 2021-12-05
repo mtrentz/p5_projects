@@ -7,6 +7,9 @@ Some drawings and animations I've been making on p5.
 <br/>
 <br/>
 
+- Clock Spirograph:
+  - https://editor.p5js.org/mtrentz/sketches/HH50kBzZ3
+
 - Pyramids:
   - https://preview.p5js.org/mtrentz/present/nGLS11___
 
