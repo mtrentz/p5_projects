@@ -20,7 +20,10 @@ class Game {
     // Number of bombs
     bombs: number;
 
-    constructor(rows: number = 20, cols: number = 20, bombs: number = 40) {
+    // // Memo for cells checked
+    // memoZeroes 
+
+    constructor(rows: number = 20, cols: number = 20, bombs: number = 80) {
         this.rows = rows;
         this.cols = cols;
         this.bombs = bombs;
@@ -77,6 +80,9 @@ class Game {
                 placedBombs++;
             }
         }
+
+        // Recount the bombs
+        this.recount();
     }
 
 
@@ -106,7 +112,7 @@ class Game {
                 for (let x = i - 1; x <= i + 1; x++) {
                     for (let y = j - 1; y <= j + 1; y++) {
                         // Check out of bounds
-                        if (x < 0 || x >= this.rows || y < 0 || y >= this.cols) {
+                        if (this._isOutOfBounds(x, y)) {
                             continue;
                         }
                         // Increment nearbyBombs
@@ -115,6 +121,52 @@ class Game {
                 }
             }
         }
+    }
+
+    _isOutOfBounds(i: number, j: number) {
+        return i < 0 || i >= this.rows || j < 0 || j >= this.cols;
+    }
+
+    // Memo with a string key and a boolean value
+    revealZeroes(i: number, j: number, memo: { [key: string]: boolean }) {
+        let cell = this.cells[i][j]
+
+        // If its a bomb, return
+        if (cell.isBomb) {
+            return
+        }
+
+
+        if (cell.nearbyBombs > 0) {
+            return
+        }
+
+        // Seto a celula atual para revelada
+        cell.isRevealed = true;
+
+
+        // Loopo em todas as celulas em volta
+        // dessa atual e chamo a função denovo
+        for (let x = i - 1; x <= i + 1; x++) {
+            for (let y = j - 1; y <= j + 1; y++) {
+                // Check out of bounds
+                if (this._isOutOfBounds(x, y)) {
+                    continue;
+                }
+
+                // Check if already checked, check for undefined
+                if (memo[`x${x}y${y}`]) {
+                    continue;
+                }
+
+                // Set memo to true
+                memo[`x${x}y${y}`] = true;
+
+                // Call function again
+                this.revealZeroes(x, y, memo);
+            }
+        }
+
     }
 
 

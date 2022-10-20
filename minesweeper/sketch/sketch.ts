@@ -29,13 +29,22 @@ function mousePressed() {
         console.log("Clicked on cell (i,j)", i, j);
         // Check for left click
         if (mouseButton === LEFT) {
+          // Checo se é uma bomba, se for, dou console log
+          if (cell.isBomb) {
+            console.log("Bomba");
+            return
+          }
+
           // For every mouse click, for now, recount
           // the nearby bombs
           game.recount();
 
-          // Reveal the cell
-          cell.isRevealed = true;
-          console.log("Revealed cell", i, j);
+          // Se nao for, revelo os zeros de tudo
+          game.revealZeroes(i, j, {});
+
+          // // Reveal the cell
+          // cell.isRevealed = true;
+          // console.log("Revealed cell", i, j);
         }
       }
     }
