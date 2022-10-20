@@ -41,12 +41,12 @@ class Game {
             this.cells[i] = [];
             for (let j = 0; j < this.cols; j++) {
                 const p1 = createVector(
-                    origin.x + i * cellWidth,
-                    origin.y + j * cellHeight
+                    origin.x + j * cellWidth,
+                    origin.y + i * cellHeight
                 );
                 const p2 = createVector(
-                    origin.x + (i + 1) * cellWidth,
-                    origin.y + (j + 1) * cellHeight
+                    origin.x + (j + 1) * cellWidth,
+                    origin.y + (i + 1) * cellHeight
                 );
                 this.cells[i][j] = {
                     p1,
@@ -80,9 +80,42 @@ class Game {
     }
 
 
-    // count() {
-    //     // Iterate 
-    // }
+    recount() {
+        // This is probably super inefficient,
+        // but iterate over all cells and reset the 
+        // counters
+        for (let i = 0; i < this.rows; i++) {
+            for (let j = 0; j < this.cols; j++) {
+                this.cells[i][j].nearbyBombs = 0;
+            }
+        }
+
+        // Iterate over all cells that are bombs
+        // and increment the nearbyBombs counter
+        // of all adjacent cells
+        for (let i = 0; i < this.rows; i++) {
+            for (let j = 0; j < this.cols; j++) {
+                const cell = this.cells[i][j];
+                if (!cell.isBomb) {
+                    continue;
+                }
+
+                // Loop from i-1 and j-1 
+                // to i+1 and j+1,
+                // checking if out of bounds
+                for (let x = i - 1; x <= i + 1; x++) {
+                    for (let y = j - 1; y <= j + 1; y++) {
+                        // Check out of bounds
+                        if (x < 0 || x >= this.rows || y < 0 || y >= this.cols) {
+                            continue;
+                        }
+                        // Increment nearbyBombs
+                        this.cells[x][y].nearbyBombs++;
+                    }
+                }
+            }
+        }
+    }
 
 
     draw() {
@@ -105,6 +138,21 @@ class Game {
 
                 rect(cell.p1.x, cell.p1.y, cell.p2.x - cell.p1.x, cell.p2.y - cell.p1.y);
                 pop();
+            }
+        }
+
+        // Draw the numbers
+        for (let i = 0; i < this.rows; i++) {
+            for (let j = 0; j < this.cols; j++) {
+                const cell = this.cells[i][j];
+                // if (cell.isRevealed && cell.nearbyBombs > 0) {
+                if (!cell.isBomb) {
+                    push();
+                    fill(0);
+                    textAlign(CENTER, CENTER);
+                    text(cell.nearbyBombs, cell.p1.x, cell.p1.y, cell.p2.x - cell.p1.x, cell.p2.y - cell.p1.y);
+                    pop();
+                }
             }
         }
     }

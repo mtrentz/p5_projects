@@ -26,9 +26,13 @@ function mousePressed() {
         mouseY > cell.p1.y &&
         mouseY < cell.p2.y
       ) {
-        console.log("Clicked on cell", i, j);
+        console.log("Clicked on cell (i,j)", i, j);
         // Check for left click
         if (mouseButton === LEFT) {
+          // For every mouse click, for now, recount
+          // the nearby bombs
+          game.recount();
+
           // Reveal the cell
           cell.isRevealed = true;
           console.log("Revealed cell", i, j);
