@@ -9,8 +9,12 @@ function setup() {
 function draw() {
   background(150);
   game.draw();
-  // console.log(game.cells)
-  // noLoop()
+
+
+  // If gameover, noloop
+  if (game.isGameOver) {
+    noLoop();
+  }
 }
 
 // Watch for mouse clicks
@@ -31,8 +35,9 @@ function mousePressed() {
         if (mouseButton === LEFT) {
           // Checo se é uma bomba, se for, dou console log
           if (cell.isBomb) {
-            console.log("Bomba");
-            return
+            game.gameOver();
+            console.log
+            // return
           }
 
           // For every mouse click, for now, recount
@@ -40,7 +45,12 @@ function mousePressed() {
           game.recount();
 
           // Se nao for, revelo os zeros de tudo
-          game.revealZeroes(i, j, {});
+          game.revealZeroes(i, j, cell.nearbyBombs === 0, {});
+
+          // Revela a celula clicada caso não seja um zero
+          if (cell.nearbyBombs > 0) {
+            cell.isRevealed = true;
+          }
 
           // // Reveal the cell
           // cell.isRevealed = true;

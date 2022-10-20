@@ -20,8 +20,7 @@ class Game {
     // Number of bombs
     bombs: number;
 
-    // // Memo for cells checked
-    // memoZeroes 
+    isGameOver: boolean;
 
     constructor(rows: number = 20, cols: number = 20, bombs: number = 80) {
         this.rows = rows;
@@ -31,6 +30,9 @@ class Game {
     }
 
     setup() {
+        // Set gameover false
+        this.isGameOver = false;
+
         // Figure out the size of each cell based on the canvas size
         const cellWidth = (width - 10) / this.cols;
         const cellHeight = (height - 10) / this.rows;
@@ -128,7 +130,7 @@ class Game {
     }
 
     // Memo with a string key and a boolean value
-    revealZeroes(i: number, j: number, memo: { [key: string]: boolean }) {
+    revealZeroes(i: number, j: number, prevIsZero: boolean, memo: { [key: string]: boolean }) {
         let cell = this.cells[i][j]
 
         // If its a bomb, return
@@ -136,44 +138,163 @@ class Game {
             return
         }
 
+        // Garanto q tem nearbybomb e a celula que chamou essa função
+        // NÂO era um zero. Nesse caso, nao faço nada
+        if (cell.nearbyBombs > 0 && !prevIsZero) {
+            return
+        }
 
-        if (cell.nearbyBombs > 0) {
+        if (!prevIsZero) {
             return
         }
 
         // Seto a celula atual para revelada
         cell.isRevealed = true;
 
+        // Preciso chamar a função recursivamente
+        // pra cima, baixo, esquerda e direita.
 
-        // Loopo em todas as celulas em volta
-        // dessa atual e chamo a função denovo
-        for (let x = i - 1; x <= i + 1; x++) {
-            for (let y = j - 1; y <= j + 1; y++) {
-                // Check out of bounds
-                if (this._isOutOfBounds(x, y)) {
-                    continue;
+        // Pra cima (significa DIMINUIR o 'i')
+        let x = i - 1
+        let y = j
+        if (!this._isOutOfBounds(x, y)) {
+            // Check if not already memoized
+            if (!memo[`x${x}y${y}`]) {
+                // Só seto o memo se a celula não for zero
+                if (cell.nearbyBombs === 0) {
+                    memo[`x${x}y${y}`] = true;
                 }
-
-                // Check if already checked, check for undefined
-                if (memo[`x${x}y${y}`]) {
-                    continue;
-                }
-
-                // Set memo to true
-                memo[`x${x}y${y}`] = true;
-
-                // Call function again
-                this.revealZeroes(x, y, memo);
+                // Call recursively
+                this.revealZeroes(x, y, cell.nearbyBombs === 0, memo);
             }
         }
 
+        // Pra baixo (significa AUMENTAR o 'i')
+        x = i + 1
+        y = j
+        if (!this._isOutOfBounds(x, y)) {
+            // Check if not already memoized
+            if (!memo[`x${x}y${y}`]) {
+                // Só seto o memo se a celula não for zero
+                if (cell.nearbyBombs === 0) {
+                    memo[`x${x}y${y}`] = true;
+                }
+
+                // Call recursively
+                this.revealZeroes(x, y, cell.nearbyBombs === 0, memo);
+            }
+        }
+
+        // Pra direita (significa AUMENTAR o 'j')
+        x = i
+        y = j + 1
+        if (!this._isOutOfBounds(x, y)) {
+            // Check if not already memoized
+            if (!memo[`x${x}y${y}`]) {
+                // Só seto o memo se a celula não for zero
+                if (cell.nearbyBombs === 0) {
+                    memo[`x${x}y${y}`] = true;
+                }
+                // Call recursively
+                this.revealZeroes(x, y, cell.nearbyBombs === 0, memo);
+            }
+        }
+
+        // Pra esquerda (significa DIMINUIR o 'j')
+        x = i
+        y = j - 1
+        if (!this._isOutOfBounds(x, y)) {
+            // Check if not already memoized
+            if (!memo[`x${x}y${y}`]) {
+                // Só seto o memo se a celula não for zero
+                if (cell.nearbyBombs === 0) {
+                    memo[`x${x}y${y}`] = true;
+                }
+                // Call recursively
+                this.revealZeroes(x, y, cell.nearbyBombs === 0, memo);
+            }
+        }
+
+        // Preciso agora conferir as 4 diagonais, mas só checando
+        // se revelo ela ou não
+
+        // Diagonal cima/esquerda
+        x = i + 1
+        y = j - 1
+        if (!this._isOutOfBounds(x, y)) {
+            // Confiro se essa celula ai tem nearByBomb
+            // e a minha atual não
+            if (this.cells[x][y].nearbyBombs > 0 && cell.nearbyBombs === 0) {
+                // Seto ela como revelada
+                this.cells[x][y].isRevealed = true
+            }
+        }
+
+        // Diagonal cima/direita
+        x = i + 1
+        y = j + 1
+        if (!this._isOutOfBounds(x, y)) {
+            // Confiro se essa celula ai tem nearByBomb
+            // e a minha atual não
+            if (this.cells[x][y].nearbyBombs > 0 && cell.nearbyBombs === 0) {
+                // Seto ela como revelada
+                this.cells[x][y].isRevealed = true
+            }
+        }
+
+        // Diagonal baixo/esquerda
+        x = i - 1
+        y = j - 1
+        if (!this._isOutOfBounds(x, y)) {
+            // Confiro se essa celula ai tem nearByBomb
+            // e a minha atual não
+            if (this.cells[x][y].nearbyBombs > 0 && cell.nearbyBombs === 0) {
+                // Seto ela como revelada
+                this.cells[x][y].isRevealed = true
+            }
+        }
+
+
+        // Diagonal baixo/direita
+        x = i - 1
+        y = j + 1
+        if (!this._isOutOfBounds(x, y)) {
+            // Confiro se essa celula ai tem nearByBomb
+            // e a minha atual não
+            if (this.cells[x][y].nearbyBombs > 0 && cell.nearbyBombs === 0) {
+                // Seto ela como revelada
+                this.cells[x][y].isRevealed = true
+            }
+        }
     }
 
+    gameOver() {
+        this.isGameOver = true;
+    }
 
     draw() {
         for (let i = 0; i < this.rows; i++) {
             for (let j = 0; j < this.cols; j++) {
                 const cell = this.cells[i][j];
+
+                // If gameover, set to black and continue
+                if (this.isGameOver) {
+                    push();
+                    fill(0);
+                    rect(cell.p1.x, cell.p1.y, cell.p2.x - cell.p1.x, cell.p2.y - cell.p1.y);
+                    pop();
+
+                    // TODO: fazer um gameover de vdd dando reveal
+                    // Write game over
+                    push();
+                    fill(255);
+                    textSize(32);
+                    textAlign(CENTER, CENTER);
+                    text('Game Over', width / 2, height / 2);
+                    pop();
+                    continue
+                }
+
                 push();
                 stroke(0);
                 // noFill();
