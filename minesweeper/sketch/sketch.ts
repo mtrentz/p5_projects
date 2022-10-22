@@ -1,9 +1,15 @@
 let game: Game;
 
+
 function setup() {
   createCanvas(400, 400);
   game = new Game();
   game.setup();
+
+  // Disable right click menu
+  document.oncontextmenu = function () {
+    return false;
+  };
 }
 
 function draw() {
@@ -30,7 +36,9 @@ function mousePressed() {
         mouseY > cell.p1.y &&
         mouseY < cell.p2.y
       ) {
+
         console.log("Clicked on cell (i,j)", i, j);
+
         // Check for left click
         if (mouseButton === LEFT) {
           // Checo se é uma bomba, se for, dou console log
@@ -51,10 +59,12 @@ function mousePressed() {
           if (cell.nearbyBombs > 0) {
             cell.isRevealed = true;
           }
+        }
 
-          // // Reveal the cell
-          // cell.isRevealed = true;
-          // console.log("Revealed cell", i, j);
+        // Check for right click
+        if (mouseButton === RIGHT) {
+          // Toggle flag
+          cell.isFlagged = !cell.isFlagged;
         }
       }
     }

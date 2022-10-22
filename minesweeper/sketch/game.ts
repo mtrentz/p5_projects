@@ -153,117 +153,54 @@ class Game {
 
         // Preciso chamar a função recursivamente
         // pra cima, baixo, esquerda e direita.
+        let adjacents = [
+            // Pra cima (significa DIMINUIR o 'i')
+            [i - 1, j],
+            // Pra baixo (significa AUMENTAR o 'i')
+            [i + 1, j],
+            // Pra esquerda (significa DIMINUIR o 'j')
+            [i, j - 1],
+            // Pra direita (significa AUMENTAR o 'j')
+            [i, j + 1]
+        ]
 
-        // Pra cima (significa DIMINUIR o 'i')
-        let x = i - 1
-        let y = j
-        if (!this._isOutOfBounds(x, y)) {
-            // Check if not already memoized
-            if (!memo[`x${x}y${y}`]) {
-                // Só seto o memo se a celula não for zero
-                if (cell.nearbyBombs === 0) {
-                    memo[`x${x}y${y}`] = true;
+        // Para cada adjacente, chamo a função recursivamente
+        for (let adjacent of adjacents) {
+            let [x, y] = adjacent
+            if (!this._isOutOfBounds(x, y)) {
+                // Check if not already memoized
+                if (!memo[`x${x}y${y}`]) {
+                    // Só seto o memo se a celula não for zero
+                    if (cell.nearbyBombs === 0) {
+                        memo[`x${x}y${y}`] = true;
+                    }
+                    // Call recursively
+                    this.revealZeroes(x, y, cell.nearbyBombs === 0, memo);
                 }
-                // Call recursively
-                this.revealZeroes(x, y, cell.nearbyBombs === 0, memo);
             }
         }
 
-        // Pra baixo (significa AUMENTAR o 'i')
-        x = i + 1
-        y = j
-        if (!this._isOutOfBounds(x, y)) {
-            // Check if not already memoized
-            if (!memo[`x${x}y${y}`]) {
-                // Só seto o memo se a celula não for zero
-                if (cell.nearbyBombs === 0) {
-                    memo[`x${x}y${y}`] = true;
+        let diagonals = [
+            // Pra cima e pra esquerda
+            [i - 1, j - 1],
+            // Pra cima e pra direita
+            [i - 1, j + 1],
+            // Pra baixo e pra esquerda
+            [i + 1, j - 1],
+            // Pra baixo e pra direita
+            [i + 1, j + 1]
+        ]
+
+        // Para cada diagonal, confiro se revelar ou não
+        for (let diagonal of diagonals) {
+            let [x, y] = diagonal
+            if (!this._isOutOfBounds(x, y)) {
+                // Confiro se essa celula ai tem nearByBomb
+                // e a minha atual não
+                if (this.cells[x][y].nearbyBombs > 0 && cell.nearbyBombs === 0) {
+                    // Seto ela como revelada
+                    this.cells[x][y].isRevealed = true
                 }
-
-                // Call recursively
-                this.revealZeroes(x, y, cell.nearbyBombs === 0, memo);
-            }
-        }
-
-        // Pra direita (significa AUMENTAR o 'j')
-        x = i
-        y = j + 1
-        if (!this._isOutOfBounds(x, y)) {
-            // Check if not already memoized
-            if (!memo[`x${x}y${y}`]) {
-                // Só seto o memo se a celula não for zero
-                if (cell.nearbyBombs === 0) {
-                    memo[`x${x}y${y}`] = true;
-                }
-                // Call recursively
-                this.revealZeroes(x, y, cell.nearbyBombs === 0, memo);
-            }
-        }
-
-        // Pra esquerda (significa DIMINUIR o 'j')
-        x = i
-        y = j - 1
-        if (!this._isOutOfBounds(x, y)) {
-            // Check if not already memoized
-            if (!memo[`x${x}y${y}`]) {
-                // Só seto o memo se a celula não for zero
-                if (cell.nearbyBombs === 0) {
-                    memo[`x${x}y${y}`] = true;
-                }
-                // Call recursively
-                this.revealZeroes(x, y, cell.nearbyBombs === 0, memo);
-            }
-        }
-
-        // Preciso agora conferir as 4 diagonais, mas só checando
-        // se revelo ela ou não
-
-        // Diagonal cima/esquerda
-        x = i + 1
-        y = j - 1
-        if (!this._isOutOfBounds(x, y)) {
-            // Confiro se essa celula ai tem nearByBomb
-            // e a minha atual não
-            if (this.cells[x][y].nearbyBombs > 0 && cell.nearbyBombs === 0) {
-                // Seto ela como revelada
-                this.cells[x][y].isRevealed = true
-            }
-        }
-
-        // Diagonal cima/direita
-        x = i + 1
-        y = j + 1
-        if (!this._isOutOfBounds(x, y)) {
-            // Confiro se essa celula ai tem nearByBomb
-            // e a minha atual não
-            if (this.cells[x][y].nearbyBombs > 0 && cell.nearbyBombs === 0) {
-                // Seto ela como revelada
-                this.cells[x][y].isRevealed = true
-            }
-        }
-
-        // Diagonal baixo/esquerda
-        x = i - 1
-        y = j - 1
-        if (!this._isOutOfBounds(x, y)) {
-            // Confiro se essa celula ai tem nearByBomb
-            // e a minha atual não
-            if (this.cells[x][y].nearbyBombs > 0 && cell.nearbyBombs === 0) {
-                // Seto ela como revelada
-                this.cells[x][y].isRevealed = true
-            }
-        }
-
-
-        // Diagonal baixo/direita
-        x = i - 1
-        y = j + 1
-        if (!this._isOutOfBounds(x, y)) {
-            // Confiro se essa celula ai tem nearByBomb
-            // e a minha atual não
-            if (this.cells[x][y].nearbyBombs > 0 && cell.nearbyBombs === 0) {
-                // Seto ela como revelada
-                this.cells[x][y].isRevealed = true
             }
         }
     }
@@ -283,7 +220,6 @@ class Game {
                     fill(0);
                     rect(cell.p1.x, cell.p1.y, cell.p2.x - cell.p1.x, cell.p2.y - cell.p1.y);
                     pop();
-
                     // TODO: fazer um gameover de vdd dando reveal
                     // Write game over
                     push();
@@ -298,15 +234,21 @@ class Game {
                 push();
                 stroke(0);
                 // noFill();
+                // If reveleade but has nearby bombs, fill with gray
+                // else fill with very light gray
                 if (cell.isRevealed) {
-                    // Green
-                    fill(0, 255, 0);
+                    if (cell.nearbyBombs > 0) {
+                        fill(150);
+                    } else {
+                        fill(200);
+                    }
                 } else if (cell.isFlagged) {
                     // Fill light blue
                     fill(0, 0, 255, 100);
                 } else if (cell.isBomb) {
+                    // For debug
                     // Fill red
-                    fill(255, 0, 0);
+                    // fill(255, 0, 0);
                 }
 
                 rect(cell.p1.x, cell.p1.y, cell.p2.x - cell.p1.x, cell.p2.y - cell.p1.y);
@@ -314,12 +256,12 @@ class Game {
             }
         }
 
-        // Draw the numbers
+        // Draw the numbers on revealed cells
         for (let i = 0; i < this.rows; i++) {
             for (let j = 0; j < this.cols; j++) {
                 const cell = this.cells[i][j];
-                // if (cell.isRevealed && cell.nearbyBombs > 0) {
-                if (!cell.isBomb) {
+                if (cell.isRevealed && cell.nearbyBombs > 0) {
+                    // if (!cell.isBomb) {
                     push();
                     fill(0);
                     textAlign(CENTER, CENTER);
