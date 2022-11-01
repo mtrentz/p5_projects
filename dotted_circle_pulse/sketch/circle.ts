@@ -3,6 +3,9 @@ interface Dot {
     pos: p5.Vector;
     vel: p5.Vector;
     acc: p5.Vector;
+    startColor: p5.Color;
+    newColor: p5.Color;
+    colorAmnt: number;
 }
 
 
@@ -22,7 +25,7 @@ class Circle {
 
     // Some config
     acceleration = 0.01;
-    max_ratio: number = 1.05;
+    max_ratio: number = 0.6;
     max_circle_per_layer = 40;
     circle_dcr_amnt = 4;
     vector_decrease_amnt = 10;
@@ -63,7 +66,10 @@ class Circle {
                     original_pos: createVector(v.x + this.x, v.y + this.y),
                     pos: createVector(v.x + this.x, v.y + this.y),
                     vel: createVector(0, 0),
-                    acc: createVector(0, 0)
+                    acc: createVector(0, 0),
+                    startColor: color(random(255), random(255), random(255)),
+                    newColor: color(random(255), random(255), random(255)),
+                    colorAmnt: 0
                 }
                 this.dots.push(dot);
                 v.rotate(TWO_PI / this.max_circle_per_layer);
@@ -88,7 +94,24 @@ class Circle {
 
     show() {
         for (let i = 0; i < this.dots.length; i++) {
+            push();
+            // Get interpolated color
+            let c = lerpColor(this.dots[i].startColor, this.dots[i].newColor, this.dots[i].colorAmnt);
+            // Raise the colorAmnt
+            this.dots[i].colorAmnt += 0.1;
+            // Draw the dot
+            fill(c);
             ellipse(this.dots[i].pos.x, this.dots[i].pos.y, 5, 5);
+            pop();
+
+            // Reset the colorAmnt if it's bigger than 1
+            if (this.dots[i].colorAmnt > 1) {
+                this.dots[i].colorAmnt = 0;
+                // Set startColor to the newColor
+                this.dots[i].startColor = this.dots[i].newColor;
+                // Set newColor to a random color
+                this.dots[i].newColor = color(random(255), random(255), random(255));
+            }
         }
     }
 
