@@ -39,7 +39,7 @@ class Circle {
 
   checkIfDone() {
     // Confere se chegou perto da distancia entre a startPos e a endPos
-    if (p5.Vector.dist(this.currentPos, this.endPos) < p5.Vector.dist(this.startPos, this.endPos) * 0.01) {
+    if (p5.Vector.dist(this.currentPos, this.endPos) < p5.Vector.dist(this.startPos, this.endPos) * LERP_PERFECTION_PCT) {
       this.isDone = true;
     }
   }
@@ -91,17 +91,15 @@ function setup() {
 }
 
 let START_ANGLE = 0;
-let START_DISTANCE = 50;
-let ANGLE_STEP = 0.5;
-// From -1 to 1
-let DISTANCE_STEP = 2;
-let START_RADIUS = 5;
-let END_RADIUS = 50;
-let CIRCLE_SPEED = 0.06;
-// Every X frames, create circle
-let CIRCLE_FREQUENCY = 1;
-let MAX_DISTANCE = 200;
-
+let START_DISTANCE = 25;
+let ANGLE_STEP = 0.3;
+let DISTANCE_STEP = 0.5;
+let START_RADIUS = 25;
+let END_RADIUS = 500;
+let CIRCLE_SPEED = 0.05;
+let CIRCLE_FREQUENCY = 2; // Every X frames, create circle
+let MAX_DISTANCE = 100;
+let LERP_PERFECTION_PCT = 0.01; // Quanto % da distancia nos lerp até considerar done
 
 // Starting values
 let launchAngle = START_ANGLE;
