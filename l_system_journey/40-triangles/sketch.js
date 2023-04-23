@@ -3,29 +3,25 @@ let step;
 let angle;
 
 function setup() {
-    step = 5;
-    angle = radians(30);
+    step = 10;
+    angle = radians(120);
 
-    // let axiom = 'X';
-    // let rules = {
-    //     'X': 'F+[[X]-X]-F[-FX]+X',
-    //     'F': 'FF'
-    // };
-    let axiom = 'F';
+    let axiom = "F-G-G"
     let rules = {
-        'F': "FF+[+F-F-F]-[-F+F+F]"
+        "F": "F-G+F+G-F",
+        "G": "GG",
     };
 
     lsys = new LSystem(axiom, rules);
 
-    createCanvas(900, 600);
+    createCanvas(600, 600);
 }
 
 function myDraw() {
     background(220);
     resetMatrix(); // Reset the transformation matrix to the identity matrix
-    translate(width / 4, height);
-    rotate(radians(25));
+    translate(0 + 25, 0 + 25);
+    rotate(PI); // Rotate 180 degrees (PI radians)
     stroke(0);
     strokeWeight(1);
 
@@ -36,6 +32,10 @@ function myDraw() {
                 line(0, 0, 0, -step);
                 translate(0, -step);
                 break;
+            case 'G':
+                line(0, 0, 0, -step);
+                translate(0, -step);
+                break;
             case '+':
                 rotate(angle);
                 break;
@@ -43,14 +43,15 @@ function myDraw() {
                 rotate(-angle);
                 break;
             case '[':
-                push(); // Save the current transformation matrix
+                push();
                 break;
             case ']':
-                pop(); // Restore the previous transformation matrix
+                pop();
                 break;
         }
     }
 }
+
 
 
 function mousePressed() {
