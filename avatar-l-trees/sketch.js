@@ -9,14 +9,17 @@ let randomColor;
 function setup() {
     createCanvas(600, 600);
 
-    step = 5;
     startX = width / 2;
     startY = height;
-    angle = radians(30);
     let axiom = 'F';
     let rules = {
         'F': "FF+[+F-F-F]-[-F+F+F]"
     };
+
+    // Random step between 3 and 8
+    step = random(3, 8);
+    // Random angle between 20 and 40
+    angle = radians(random(20, 40));
 
     // Random color between red, brown, blue and gray
     // TODO: Have it as separate object so I can have trunk color also.
@@ -33,7 +36,7 @@ function setup() {
 }
 
 function myDraw() {
-    // If generation gt 5, dont draw
+    // If generation gt 6, dont draw (too laggy)
     if (lsys.generation > 6) {
         return;
     }
@@ -44,7 +47,6 @@ function myDraw() {
     rotate(startAngle);
     stroke(0);
     strokeWeight(1);
-
 
     for (let i = 0; i < lsys.current.length; i++) {
         let c = lsys.current.charAt(i);
@@ -67,12 +69,13 @@ function myDraw() {
                 push();
                 break;
             case ']':
-                // Draw a triangle
+                // Draw a triangle at end of branch
                 push();
                 fill(randomColor);
                 noStroke();
                 triangle(0, 0, -step, -step, step, -step);
                 pop();
+
                 pop();
                 break;
             case 'X':
