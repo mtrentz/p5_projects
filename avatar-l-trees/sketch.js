@@ -3,7 +3,7 @@ let step;
 let angle;
 let startX;
 let startY;
-let startAngle;
+let treeAngle;
 let randomColor;
 
 function setup() {
@@ -16,9 +16,8 @@ function setup() {
         'F': "FF+[+F-F-F]-[-F+F+F]"
     };
 
-    // Random step between 3 and 8
     step = random(3, 8);
-    // Random angle between 20 and 40
+    treeAngle = radians(random(-10, 10));
     angle = radians(random(20, 40));
 
     // Random color between red, brown, blue and gray
@@ -44,12 +43,27 @@ function myDraw() {
     background(220);
     resetMatrix();
     translate(startX, startY);
-    rotate(startAngle);
+    rotate(treeAngle);
     stroke(0);
     strokeWeight(1);
 
     for (let i = 0; i < lsys.current.length; i++) {
+
         let c = lsys.current.charAt(i);
+
+        // Check if end of branch
+        if (c == ']') {
+            // Small chance to increase angle
+            if (random(1) < 0.01) {
+                angle += radians(random(0.01, 0.02));
+            }
+
+            // Small chance to decrease angle
+            if (random(1) < 0.01) {
+                angle -= radians(random(0.01, 0.02));
+            }
+        }
+
         switch (c) {
             case 'F':
                 line(0, 0, 0, -step);
