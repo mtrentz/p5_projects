@@ -30,6 +30,8 @@ function setup() {
         color("#713f12") // Brown
     ];
     randomColor = random(colors);
+    // Add alpha
+    randomColor.setAlpha(200);
 
     lsys = new LSystem(axiom, rules);
 }
