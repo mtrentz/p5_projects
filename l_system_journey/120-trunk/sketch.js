@@ -33,6 +33,7 @@ function setup() {
     angle = radians(22.5);
     step = 5;
 
+    // TODO: Add background color also here
     // Colors for leaves and trunk
     let colors = [
         // Gray laves, dark trunk 
@@ -61,7 +62,7 @@ function setup() {
 }
 
 function myDraw() {
-    background("#ecfdf5)");
+    background("#e9d5ff");
 
     // Draw a trunk from bottom of string until like 1/3 of the way up.
     push();
