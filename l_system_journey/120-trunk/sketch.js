@@ -13,25 +13,185 @@ function setup() {
     treeStartX = width / 2;
     treeStartY = height * 0.9;
     treeAngle = radians(0);
-    let axiom = 'F';
+    // let axiom = 'F';
+    // let rules = {
+    //     // Will pick a random rule from the array
+    //     'F': [
+    //         "FF+[+F-F-F]-[-F+F+F]",
+    //         "F[+F]F[-F]F",
+    //     ]
+    // };
+
+    // Too simple
+    // let axiom = 'X';
+    // let rules = {
+    //     'X': [
+    //         "F[+X]F[-X]+X",
+    //         "F[-X]F[+X]-X"
+    //     ],
+    //     'F': [
+    //         "FF"
+    //     ]
+    // };
+
+    // Looks decent 6 steps. But too simple
+    // let axiom = 'X';
+    // let rules = {
+    //     'X': [
+    //         "F-[[X]+X]+F[+FX]-X",
+    //         "F+[+X]-X",
+    //         "F[-X]F[+X]-X"
+    //     ],
+    //     'F': [
+    //         "FF"
+    //     ]
+    // };
+
+    // Still simple but the best so far.
+    // Pretty compact.
+    // let axiom = 'X';
+    // let rules = {
+    //     'X': [
+    //         "F[+X][-X]FX",
+    //         "F[-X]F[+X]+X"
+    //     ],
+    //     'F': [
+    //         "F[-F]F",
+    //         "F[+F]F"
+    //     ]
+    // };
+
+    // let axiom = 'X';
+    // let rules = {
+    //     'X': [
+    //         "F[-X][+X]F[+FX]FX",
+    //         "F[+X][-X]F[-FX]FX",
+    //         "F[+X]F[+FX]F[-X]F[-FX]"
+    //     ],
+    //     'F': [
+    //         "FF",
+    //         "F[+F]F",
+    //         "F[-F]F"
+    //     ]
+    // };
+
+    // let axiom = 'X';
+    // let rules = {
+    //     'X': [
+    //         "F[+X]F[-X]F[-F]F[+FX]FX",
+    //         "F[-X]F[+X]F[+F]F[-FX]FX",
+    //         "F[+X]F[-X]F[+FX]F[-F]F[+F]F[-FX]"
+    //     ],
+    //     'F': [
+    //         "FF",
+    //         "F[+F]F",
+    //         "F[-F]F",
+    //         "F[+F]F[-F]F",
+    //         "F[-F]F[+F]F"
+    //     ]
+    // };
+
+
+    // This one with a high step looks really good
+    // need to change the "leaves" strategy though.
+    // let axiom = 'X';
+    // let rules = {
+    //     'X': [
+    //         "F[+X]F[-X]+F[-F]F[+FX]FX",
+    //         "F[-X]F[+X]-F[+F]F[-FX]FX",
+    //         "F[+X]F[-X]-F[-F]F[+F]F[-FX]"
+    //     ]
+    // };
+
+    // let axiom = 'X';
+    // let rules = {
+    //     'X': [
+    //         "F[-X][+X]F[+F]F[+FX]FX",
+    //         "F[-X]F[+X]F[+F]F[-FX]FX"
+    //     ],
+    //     'F': [
+    //         "F[+F]F",
+    //         "F[-F]F"
+    //     ]
+    // };
+
+    // This one without the 'F" rule also looks good.
+    // let axiom = 'X';
+    // let rules = {
+    //     'X': [
+    //         "F[-X][+X]F[+F]F[-FX]FX",
+    //         "F[-X]F[+X]F[+F]F[-FX]FX",
+    //         "F[+X]F[-X]F[-F]F[+F]F[-FX]"
+    //     ],
+    //     // 'F': [
+    //     //     "FF",
+    //     //     "F[+F]F",
+    //     //     "F[-F]F"
+    //     // ]
+    // };
+
+    // This one looks really good also!
+    // let axiom = 'X';
+    // let rules = {
+    //     'X': [
+    //         "F[+X]F[-X]+F[-F]F[+FX]FX",
+    //         "F[-X]F[+X]-F[+F]F[-FX]FX",
+    //         "F[+X]F[-X]-F[-F]F[+F]F[-FX]",
+    //         "FF[+X]F[-X]+F[-F]F[+FX]FX"
+    //     ]
+    // };
+
+    // Also looks good.
+    // let axiom = 'X';
+    // let rules = {
+    //     'X': [
+    //         "F[+X]F[-X]+F[-F]F[+FX]FX",
+    //         "F[-X]F[+X]-F[+F]F[-FX]FX",
+    //         "F[+X]F[-X]-F[-F]F[+F]F[-FX]",
+    //         "F[-X][+X]F[+F]F[-FX]FX"
+    //     ]
+    // };
+
+    // Also looks good
+    // let axiom = 'X';
+    // let rules = {
+    //     'X': [
+    //         "F[+X]F[-X]+F[-F]F[+FX]FX",
+    //         "F[-X]F[+X]-F[+F]F[-FX]FX",
+    //         "F[+X]F[-X]-F[-F]F[+F]F[-FX]",
+    //         "F[-X][+X]F[+F]F[-FX]FX",
+    //         "F[+X][-X]F[+F]F[-FX]FX"
+    //     ]
+    // };
+
+    // Also good
+    // let axiom = 'X';
+    // let rules = {
+    //     'X': [
+    //         "F[+X]F[-X]+F[-F]F[+FX]FX",
+    //         "F[-X]F[+X]-F[+F]F[-FX]FX",
+    //         "F[+X]F[-X]-F[-F]F[+F]F[-FX]",
+    //         "F[-X][+X]F[+F]F[-FX]FX",
+    //         "F[+X][-X]F[+F]F[-FX]FX",
+    //         "FF[+X][-X]F[+F]F[-FX]FX"
+    //     ]
+    // };
+
+    let axiom = 'X';
     let rules = {
-        // Will pick a random rule from the array
-        'F': [
-            "FF+[+F-F-F]-[-F+F+F]",
-            "FF+[+F-F-F]-[-F+F+F]",
-            "FF+[+F-F-F]-[-F+F+F]",
-            "FF+[+F-F-F]-[-F+F+F]",
-            "FF+[+F-F-F]-[-F+F+F]",
-            "FF+[+F-F-F]-[-F+F+F]",
-            "FF+[+F-F-F]-[-F+F+F]",
-            "FF+[+F-F-F]-[-F+F+F]",
-            "FF+[+F-F-F]-[-F+F+F]",
-            "FF+[+F-F-F]-[-F+F+F]",
-            "F[+F]F[-F]F",
+        'X': [
+            "F[+X]F[-X]+F[-F]F[+FX]FX",
+            "F[-X]F[+X]-F[+F]F[-FX]FX",
+            "F[+X]F[-X]-F[-F]F[+F]F[-FX]",
+            "F[-X][+X]F[+F]F[-FX]FX",
+            "F[+X][-X]F[+F]F[-FX]FX",
+            "FF[+X][-X]F[+F]F[-FX]FX"
         ]
     };
+
+
     angle = radians(22.5);
-    step = 5;
+    step = 15;
 
     // TODO: Add background color also here
     // Colors for leaves and trunk

@@ -1,70 +1,110 @@
 let lsys;
 let step;
 let angle;
-let startX;
-let startY;
+let treeStartX;
+let treeStartY;
 let treeAngle;
-let randomColor;
+let leavesColor;
+let trunkColor;
 
 function setup() {
     createCanvas(600, 600);
 
-    startX = width / 2;
-    startY = height;
-    let axiom = 'F';
+    treeStartX = width / 2;
+    treeStartY = height * 0.9;
+    treeAngle = radians(0);
+
+    let axiom = 'X';
     let rules = {
-        'F': "FF+[+F-F-F]-[-F+F+F]"
+        'X': [
+            "F[+X]F[-X]+F[-F]F[+FX]FX",
+            "F[-X]F[+X]-F[+F]F[-FX]FX",
+            "F[+X]F[-X]-F[-F]F[+F]F[-FX]",
+            "F[-X][+X]F[+F]F[-FX]FX",
+            "F[+X][-X]F[+F]F[-FX]FX",
+            "FF[+X][-X]F[+F]F[-FX]FX"
+        ]
     };
 
-    step = random(3, 8);
-    treeAngle = radians(random(-10, 10));
-    angle = radians(random(20, 40));
 
-    // Random color between red, brown, blue and gray
-    // TODO: Have it as separate object so I can have trunk color also.
-    // (1 trunc color for each tree)
+    angle = radians(22.5);
+    step = 15;
+
+    // TODO: Add background color also here
+    // Colors for leaves and trunk
     let colors = [
-        color("#e2e8f0"), // Gray
-        color("#dc2626"), // Red
-        color("#0ea5e9"), // Blue
-        color("#713f12") // Brown
+        // Gray laves, dark trunk 
+        [color("#e2e8f0"), color("#1c1917")],
+        // Red leaves, light grayish trunk
+        [color("#dc2626"), color("#a3a3a3")],
+        // Blue leaves, dark brown trunk
+        [color("#0ea5e9"), color("#422006")],
+        // Brown leaves, light brown trunk
+        [color("#713f12"), color("#854d0e")]
     ];
-    randomColor = random(colors);
-    // Add alpha
-    randomColor.setAlpha(200);
+    // Get leaves and trunk color
+    [leavesColor, trunkColor] = random(colors);
+    // Add alpha to leaves
+    leavesColor.setAlpha(200);
 
-    lsys = new LSystem(axiom, rules);
+    lsys = new StochasticLSystem(axiom, rules);
+
+    // Generate 5 times
+    for (let i = 0; i < 5; i++) {
+        lsys.generate();
+    }
+
+    // Draw the tree
+    myDraw();
 }
 
 function myDraw() {
-    // If generation gt 6, dont draw (too laggy)
-    if (lsys.generation > 6) {
-        return;
-    }
+    background("#e9d5ff");
 
-    background(220);
+    // Draw a trunk from bottom of string until like 1/3 of the way up.
+    push();
+    translate(width / 2, height);
+
+    // consts for trunk
+    // height as percentage of canvas
+    const trunkHeight = 0.3;
+    // width as percentage of canvas
+    const trunkWidth = 0.01;
+    // top width will be slightly less than bottom width
+    const trunkTopWidth = trunkWidth * 0.4;
+
+    noStroke();
+    fill(trunkColor);
+    quad(
+        // x1 slightly to the left
+        -width * trunkWidth / 2,
+        // y1 at bottom
+        0,
+        // x2 slightly to the right
+        width * trunkWidth / 2,
+        // y2 at bottom
+        0,
+        // x3 slightly less to the right
+        width * trunkTopWidth / 2,
+        // y3
+        -height * trunkHeight,
+        // x4 slightly less to the left
+        -width * trunkTopWidth / 2,
+        // y4
+        -height * trunkHeight
+    );
+    pop();
+
+    push();
     resetMatrix();
-    translate(startX, startY);
+    translate(treeStartX, treeStartY);
     rotate(treeAngle);
-    stroke(0);
     strokeWeight(1);
+    stroke(trunkColor)
 
     for (let i = 0; i < lsys.current.length; i++) {
 
         let c = lsys.current.charAt(i);
-
-        // Check if end of branch
-        if (c == ']') {
-            // Small chance to increase angle
-            if (random(1) < 0.01) {
-                angle += radians(random(0.01, 0.02));
-            }
-
-            // Small chance to decrease angle
-            if (random(1) < 0.01) {
-                angle -= radians(random(0.01, 0.02));
-            }
-        }
 
         switch (c) {
             case 'F':
@@ -87,7 +127,7 @@ function myDraw() {
             case ']':
                 // Draw a triangle at end of branch
                 push();
-                fill(randomColor);
+                fill(leavesColor);
                 noStroke();
                 triangle(0, 0, -step, -step, step, -step);
                 pop();
@@ -99,14 +139,23 @@ function myDraw() {
                 break;
         }
     }
+    pop();
 
 }
 
 
 
 function mousePressed() {
-    lsys.generate();
-    console.log(lsys.generation);
-    console.log(lsys.current)
-    myDraw();
+    setup();
 }
+
+// function mousePressed() {
+//     // If generation gt 6, dont draw (too laggy)
+//     if (lsys.generation > 6) {
+//         return;
+//     }
+//     lsys.generate();
+//     console.log(lsys.generation);
+//     console.log(lsys.current)
+//     myDraw();
+// }
