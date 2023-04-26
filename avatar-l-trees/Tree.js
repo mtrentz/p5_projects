@@ -22,13 +22,14 @@ class Tree {
         this.startAngle = radians(0);
 
         // Thunk constants
-        this.trunkHeight = 0.3;
-        this.trunkWidth = 0.01;
-        this.trunkTopWidth = this.trunkWidth * 0.3;
+        this.trunkHeight = 0.25;
+        this.trunkWidth = random(0.01, 0.035)
+        this.trunkTopWidth = this.trunkWidth * random(0.3, 0.5)
 
-        // Angle from 20-30
+        // Leaf constants
+        this.leavesChance = random(0.6, 1)
+
         this.angle = radians(random(15, 25));
-        // Step from 5-20
         this.step = random(15, 20);
 
         this.lsys = new StochasticLSystem(this.axiom, this.rules);
@@ -37,6 +38,19 @@ class Tree {
         for (let i = 0; i < this.generation; i++) {
             this.lsys.generate();
         }
+    }
+
+    _drawLeaf(x, y) {
+        if (random() > this.leavesChance) {
+            return;
+        }
+
+        // Draw a triangle (leaf) at end of branch
+        push();
+        fill(this.leavesColor);
+        noStroke();
+        triangle(x, y, -this.step, -this.step, this.step, -this.step);
+        pop();
     }
 
     draw() {
@@ -98,13 +112,7 @@ class Tree {
                     push();
                     break;
                 case ']':
-                    // Draw a triangle (leaf) at end of branch
-                    push();
-                    fill(this.leavesColor);
-                    noStroke();
-                    triangle(0, 0, -this.step, -this.step, this.step, -this.step);
-                    pop();
-
+                    this._drawLeaf(0, 0);
                     pop();
                     break;
                 case 'X':
