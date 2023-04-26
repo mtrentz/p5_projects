@@ -17,12 +17,13 @@ function setup() {
     let axiom = 'X';
     let rules = {
         'X': [
-            "F[+X]F[-X]+F[-F]F[+FX]FX",
-            "F[-X]F[+X]-F[+F]F[-FX]FX",
-            "F[+X]F[-X]-F[-F]F[+F]F[-FX]",
-            "F[-X][+X]F[+F]F[-FX]FX",
-            "F[+X][-X]F[+F]F[-FX]FX",
-            "FF[+X][-X]F[+F]F[-FX]FX"
+            // First element is the weight (chance of being picked).
+            [0.1, "F[+X]F[-X]+F[-F]F[+FX]FX",],
+            [0.1, "F[-X]F[+X]-F[+F]F[-FX]FX",],
+            [0.1, "F[+X]F[-X]-F[-F]F[+F]F[-FX]",],
+            [0.1, "F[-X][+X]F[+F]F[-FX]FX",],
+            [0.1, "F[+X][-X]F[+F]F[-FX]FX",],
+            [0.1, "FF[+X][-X]F[+F]F[-FX]FX"],
         ]
     };
 
