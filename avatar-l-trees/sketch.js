@@ -30,20 +30,20 @@ function setup() {
     angle = radians(22.5);
     step = 15;
 
-    // TODO: Add background color also here
-    // Colors for leaves and trunk
+    // Colors for leaves and trunk and background
     let colors = [
         // Gray laves, dark trunk 
-        [color("#e2e8f0"), color("#1c1917")],
-        // Red leaves, light grayish trunk
-        [color("#dc2626"), color("#a3a3a3")],
-        // Blue leaves, dark brown trunk
-        [color("#0ea5e9"), color("#422006")],
-        // Brown leaves, light brown trunk
-        [color("#713f12"), color("#854d0e")]
+        [color("#fafafa"), color("#1c1917"), color("#cbd5e1")],
+        // // Red leaves, light grayish trunk
+        [color("#dc2626"), color("#71717a"), color("#f1f5f9")],
+        // // Blue leaves, dark brown trunk
+        [color("#0ea5e9"), color("#422006"), color("#f1f5f9")],
+        // Brown leaves, dark brown trunk
+        [color("#a16207"), color("#713f12"), color("#f1f5f9")],
     ];
+
     // Get leaves and trunk color
-    [leavesColor, trunkColor] = random(colors);
+    [leavesColor, trunkColor, backgroundColor] = random(colors);
     // Add alpha to leaves
     leavesColor.setAlpha(200);
 
@@ -59,7 +59,7 @@ function setup() {
 }
 
 function myDraw() {
-    background("#e9d5ff");
+    background(backgroundColor);
 
     // Draw a trunk from bottom of string until like 1/3 of the way up.
     push();
@@ -71,7 +71,7 @@ function myDraw() {
     // width as percentage of canvas
     const trunkWidth = 0.01;
     // top width will be slightly less than bottom width
-    const trunkTopWidth = trunkWidth * 0.4;
+    const trunkTopWidth = trunkWidth * 0.3;
 
     noStroke();
     fill(trunkColor);
