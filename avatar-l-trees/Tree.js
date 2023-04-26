@@ -27,8 +27,7 @@ class Tree {
         this.trunkTopWidth = this.trunkWidth * random(0.3, 0.5)
 
         // Leaf constants
-        // this.leafType = random(['eliptical', 'curved', 'rounded'])
-        this.leafType = random(['eliptical'])
+        this.leafType = random(['eliptical', 'curved', 'rounded'])
         this.leavesChance = random(0.6, 1)
         this.leafHeight = random(20, 40)
 
