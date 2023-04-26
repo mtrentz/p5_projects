@@ -27,7 +27,10 @@ class Tree {
         this.trunkTopWidth = this.trunkWidth * random(0.3, 0.5)
 
         // Leaf constants
+        // this.leafType = random(['eliptical', 'curved', 'rounded'])
+        this.leafType = random(['eliptical'])
         this.leavesChance = random(0.6, 1)
+        this.leafHeight = random(20, 40)
 
         this.angle = radians(random(15, 25));
         this.step = random(15, 20);
@@ -40,17 +43,67 @@ class Tree {
         }
     }
 
+    _elipticalLeaf() {
+        push();
+        beginShape();
+        fill(this.leavesColor);
+        noStroke();
+        vertex(0, 0);
+        bezierVertex(this.leafHeight * 0.4, -this.leafHeight * 0.2, this.leafHeight * 0.2, -this.leafHeight * 0.8, 0, -this.leafHeight);
+        endShape();
+
+        beginShape();
+        vertex(0, 0);
+        bezierVertex(-this.leafHeight * 0.4, -this.leafHeight * 0.2, -this.leafHeight * 0.2, -this.leafHeight * 0.8, 0, -this.leafHeight);
+        endShape();
+        pop();
+
+    }
+
+    _curvedLeaf() {
+        push();
+        beginShape();
+        fill(this.leavesColor);
+        noStroke();
+        vertex(0, 0);
+        bezierVertex(this.leafHeight * 0.4, -this.leafHeight * 0.2, this.leafHeight * 0.2, -this.leafHeight * 0.8, 0, -this.leafHeight);
+        bezierVertex(-0, -this.leafHeight * 0.8, -this.leafHeight * 0.4, -this.leafHeight * 0.2, 0, 0);
+        endShape();
+        pop();
+    }
+
+    _roundedLeaf() {
+        push();
+        noStroke();
+        fill(this.leavesColor);
+        beginShape();
+        vertex(0, 0);
+        bezierVertex(this.leafHeight * 0.8, -this.leafHeight * 0.2, this.leafHeight * 0.3, -this.leafHeight * 0.8, 0, -this.leafHeight);
+        endShape();
+
+        beginShape();
+        vertex(0, 0);
+        bezierVertex(-this.leafHeight * 0.8, -20, -this.leafHeight * 0.3, -this.leafHeight * 0.8, 0, -this.leafHeight);
+        endShape();
+        pop();
+    }
+
     _drawLeaf(x, y) {
         if (random() > this.leavesChance) {
             return;
         }
 
-        // Draw a triangle (leaf) at end of branch
-        push();
-        fill(this.leavesColor);
-        noStroke();
-        triangle(x, y, -this.step, -this.step, this.step, -this.step);
-        pop();
+        switch (this.leafType) {
+            case 'eliptical':
+                this._elipticalLeaf();
+                break;
+            case 'curved':
+                this._curvedLeaf();
+                break;
+            case 'rounded':
+                this._roundedLeaf();
+                break;
+        }
     }
 
     draw() {

@@ -1,4 +1,5 @@
 let tree;
+
 function setup() {
     createCanvas(600, 600);
 
